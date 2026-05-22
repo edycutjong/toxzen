@@ -1,0 +1,708 @@
+/* ═══════════════════════════════════════════════════════════════════════════════
+   ToxZen 🧘 — Design System
+   Military SOC meets Wellness App
+
+   Uses the canonical design tokens from docs/assets/_tokens.css as the single
+   source of truth. The --tox-* aliases below map to those tokens so the app
+   and asset pipeline always stay in sync.
+   ═══════════════════════════════════════════════════════════════════════════════ */
+
+/* ─── CSS Variables ──────────────────────────────────────────────────────────── */
+:root {
+  /* Backgrounds — derived from _tokens.css */
+  --tox-bg: var(--bg-base, #0f172a);
+  --tox-surface: #1e293b;
+  --tox-surface-hover: #263548;
+  --tox-border: var(--border-default, rgba(255, 255, 255, 0.15));
+  --tox-border-light: #475569;
+
+  /* Text — derived from _tokens.css */
+  --tox-text: var(--text-hi, #f8fafc);
+  --tox-text-secondary: #cbd5e1;
+  --tox-muted: var(--text-mid, #94a3b8);
+
+  /* Accent Colors — derived from _tokens.css */
+  --tox-zen: var(--primary, #06b6d4);
+  --tox-zen-glow: var(--primary-glow, rgba(6, 182, 212, 0.15));
+  --tox-safe: var(--color-success, #22c55e);
+  --tox-safe-glow: var(--color-success-glow, rgba(34, 197, 94, 0.15));
+  --tox-warn: var(--color-warning, #f59e0b);
+  --tox-warn-glow: var(--color-warning-glow, rgba(245, 158, 11, 0.15));
+  --tox-danger: var(--color-error, #ef4444);
+  --tox-danger-glow: var(--color-error-glow, rgba(239, 68, 68, 0.15));
+  --tox-shield: var(--accent, #8b5cf6);
+  --tox-shield-glow: var(--accent-glow, rgba(139, 92, 246, 0.15));
+
+  /* Radius — aligned with _tokens.css scale */
+  --radius-sm: var(--radius-8, 8px);
+  --radius-md: var(--radius-12, 12px);
+  --radius-lg: var(--radius-16, 16px);
+
+  /* Spacing */
+  --space-xs: var(--spacing-4, 4px);
+  --space-sm: var(--spacing-8, 8px);
+  --space-md: var(--spacing-12, 12px);
+  --space-lg: var(--spacing-16, 16px);
+  --space-xl: var(--spacing-24, 24px);
+  --space-2xl: var(--spacing-32, 32px);
+
+  /* Font — aligned with _tokens.css (JetBrains Mono as primary mono) */
+  --font-mono: var(--font-mono-stack, 'JetBrains Mono', 'Cascadia Code', 'Fira Code', monospace);
+  --font-sans: var(--font-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  --font-display: var(--font-display-stack, 'Orbitron', 'Space Grotesk', system-ui, sans-serif);
+
+  /* Shadows — aligned with _tokens.css scale */
+  --shadow-sm: var(--shadow-sm, 0 1px 2px rgba(0, 0, 0, 0.3));
+  --shadow-md: var(--shadow-md, 0 4px 12px rgba(0, 0, 0, 0.4));
+  --shadow-lg: var(--shadow-lg, 0 12px 40px rgba(0, 0, 0, 0.5));
+
+  /* Transitions — aligned with _tokens.css */
+  --transition-fast: var(--transition-fast, 150ms ease);
+  --transition-normal: var(--transition-normal, 250ms ease);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--tox-bg);
+  color: var(--tox-text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ─── Layout ─────────────────────────────────────────────────────────────────── */
+.toxzen-app {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: var(--space-md);
+  min-height: 100vh;
+}
+
+/* ─── Header ─────────────────────────────────────────────────────────────────── */
+.toxzen-header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--tox-border);
+  margin-bottom: var(--space-lg);
+}
+
+.toxzen-header__icon {
+  font-size: 24px;
+}
+
+.toxzen-header__title {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--tox-zen);
+}
+
+.toxzen-header__subtitle {
+  font-size: 12px;
+  color: var(--tox-muted);
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+
+/* ─── Cards ──────────────────────────────────────────────────────────────────── */
+.card {
+  background: var(--tox-surface);
+  border: 1px solid var(--tox-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-md);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  border-color: var(--tox-border-light);
+}
+
+.card--clickable {
+  cursor: pointer;
+}
+
+.card--clickable:hover {
+  box-shadow: 0 0 0 1px var(--tox-zen), 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.card--danger {
+  border-left: 3px solid var(--tox-danger);
+}
+
+.card--warn {
+  border-left: 3px solid var(--tox-warn);
+}
+
+.card--safe {
+  border-left: 3px solid var(--tox-safe);
+}
+
+/* ─── Appeal Card (Queue Item) ───────────────────────────────────────────────── */
+.appeal-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.appeal-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.appeal-card__username {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--tox-text);
+}
+
+.appeal-card__time {
+  font-size: 12px;
+  color: var(--tox-muted);
+  font-family: var(--font-mono);
+  margin-left: auto;
+}
+
+.appeal-card__summary {
+  font-size: 13px;
+  color: var(--tox-text-secondary);
+  line-height: 1.4;
+}
+
+.appeal-card__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  font-size: 12px;
+  color: var(--tox-muted);
+}
+
+/* ─── Severity Badge ─────────────────────────────────────────────────────────── */
+.severity-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.severity-badge--low {
+  background: var(--tox-safe-glow);
+  color: var(--tox-safe);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+}
+
+.severity-badge--medium {
+  background: var(--tox-warn-glow);
+  color: var(--tox-warn);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.severity-badge--high,
+.severity-badge--extreme {
+  background: var(--tox-danger-glow);
+  color: var(--tox-danger);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ─── Shielded Summary ───────────────────────────────────────────────────────── */
+.shield-section {
+  background: var(--tox-shield-glow);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin: var(--space-md) 0;
+}
+
+.shield-section__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--tox-shield);
+  margin-bottom: var(--space-sm);
+}
+
+.shield-section__text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--tox-text);
+}
+
+/* ─── Key Points ─────────────────────────────────────────────────────────────── */
+.key-points {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-md) 0;
+}
+
+.key-points li {
+  font-size: 13px;
+  color: var(--tox-text-secondary);
+  padding: var(--space-xs) 0;
+  padding-left: var(--space-lg);
+  position: relative;
+}
+
+.key-points li::before {
+  content: '•';
+  position: absolute;
+  left: 4px;
+  color: var(--tox-zen);
+  font-weight: bold;
+}
+
+/* ─── Detail Row ─────────────────────────────────────────────────────────────── */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--tox-border);
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+.detail-row__label {
+  font-size: 12px;
+  color: var(--tox-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.detail-row__value {
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font-mono);
+}
+
+/* ─── Verdict Buttons ────────────────────────────────────────────────────────── */
+.verdict-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: var(--space-sm);
+  margin-top: var(--space-lg);
+}
+
+.verdict-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  border: 1px solid var(--tox-border);
+  border-radius: var(--radius-md);
+  background: var(--tox-surface);
+  color: var(--tox-text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.verdict-btn:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.verdict-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.verdict-btn--accept {
+  border-color: rgba(34, 197, 94, 0.3);
+}
+.verdict-btn--accept:hover:not(:disabled) {
+  background: var(--tox-safe-glow);
+  border-color: var(--tox-safe);
+}
+
+.verdict-btn--deny {
+  border-color: rgba(239, 68, 68, 0.3);
+}
+.verdict-btn--deny:hover:not(:disabled) {
+  background: var(--tox-danger-glow);
+  border-color: var(--tox-danger);
+}
+
+.verdict-btn--escalate {
+  border-color: rgba(245, 158, 11, 0.3);
+}
+.verdict-btn--escalate:hover:not(:disabled) {
+  background: var(--tox-warn-glow);
+  border-color: var(--tox-warn);
+}
+
+.verdict-btn--reveal {
+  border-color: rgba(148, 163, 184, 0.3);
+}
+.verdict-btn--reveal:hover:not(:disabled) {
+  background: rgba(148, 163, 184, 0.1);
+  border-color: var(--tox-muted);
+}
+
+.verdict-btn__icon {
+  font-size: 20px;
+}
+
+/* ─── Stats Grid (Wellness) ──────────────────────────────────────────────────── */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: var(--space-md);
+  margin: var(--space-lg) 0;
+}
+
+.stat-card {
+  background: var(--tox-surface);
+  border: 1px solid var(--tox-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  text-align: center;
+}
+
+.stat-card__value {
+  font-size: 28px;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  color: var(--tox-zen);
+  line-height: 1;
+}
+
+.stat-card__label {
+  font-size: 11px;
+  color: var(--tox-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: var(--space-xs);
+}
+
+/* ─── Footer Stats Bar ───────────────────────────────────────────────────────── */
+.footer-stats {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  padding: var(--space-md);
+  border-top: 1px solid var(--tox-border);
+  font-size: 12px;
+  color: var(--tox-muted);
+  font-family: var(--font-mono);
+}
+
+.footer-stats__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* ─── Empty State ────────────────────────────────────────────────────────────── */
+.empty-state {
+  text-align: center;
+  padding: var(--space-2xl) var(--space-lg);
+}
+
+.empty-state__icon {
+  font-size: 48px;
+  margin-bottom: var(--space-md);
+}
+
+.empty-state__title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--tox-safe);
+  margin-bottom: var(--space-sm);
+}
+
+.empty-state__text {
+  font-size: 14px;
+  color: var(--tox-muted);
+}
+
+/* ─── Loading State ──────────────────────────────────────────────────────────── */
+.loading-state {
+  text-align: center;
+  padding: var(--space-2xl);
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--tox-border);
+  border-top-color: var(--tox-zen);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-state__text {
+  font-size: 13px;
+  color: var(--tox-muted);
+  margin-top: var(--space-sm);
+}
+
+/* ─── Dialog / Modal ─────────────────────────────────────────────────────────── */
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.dialog {
+  background: var(--tox-surface);
+  border: 1px solid var(--tox-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  max-width: 400px;
+  width: 90%;
+}
+
+.dialog__title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tox-warn);
+  margin-bottom: var(--space-sm);
+}
+
+.dialog__text {
+  font-size: 13px;
+  color: var(--tox-text-secondary);
+  margin-bottom: var(--space-lg);
+  line-height: 1.5;
+}
+
+.dialog__actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: flex-end;
+}
+
+.dialog__btn {
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--tox-border);
+  background: transparent;
+  color: var(--tox-text);
+  font-family: var(--font-sans);
+  transition: all 0.15s ease;
+}
+
+.dialog__btn:hover {
+  background: var(--tox-surface-hover);
+}
+
+.dialog__btn--danger {
+  background: var(--tox-danger-glow);
+  border-color: var(--tox-danger);
+  color: var(--tox-danger);
+}
+
+.dialog__btn--danger:hover {
+  background: rgba(239, 68, 68, 0.25);
+}
+
+/* ─── Raw Content Box ────────────────────────────────────────────────────────── */
+.raw-content {
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin: var(--space-md) 0;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--tox-text-secondary);
+  white-space: pre-wrap;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* ─── Processed State ────────────────────────────────────────────────────────── */
+.processed-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 600;
+  background: var(--tox-zen-glow);
+  color: var(--tox-zen);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+}
+
+/* ─── Wellness Message ───────────────────────────────────────────────────────── */
+.wellness-message {
+  background: var(--tox-shield-glow);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+  border-radius: var(--radius-lg);
+  padding: var(--space-xl);
+  text-align: center;
+  margin-top: var(--space-lg);
+}
+
+.wellness-message__icon {
+  font-size: 32px;
+  margin-bottom: var(--space-sm);
+}
+
+.wellness-message__text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--tox-text-secondary);
+}
+
+.wellness-message__highlight {
+  color: var(--tox-shield);
+  font-weight: 700;
+  font-family: var(--font-mono);
+}
+
+/* ─── Decision Breakdown ─────────────────────────────────────────────────────── */
+.decision-breakdown {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-lg);
+  padding: var(--space-md) 0;
+  font-size: 13px;
+}
+
+.decision-breakdown__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+/* ─── Back Button ────────────────────────────────────────────────────────────── */
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: none;
+  background: transparent;
+  color: var(--tox-zen);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font-sans);
+  margin-bottom: var(--space-md);
+  transition: opacity 0.15s;
+}
+
+.back-btn:hover {
+  opacity: 0.7;
+}
+
+/* ─── Warning Alert ──────────────────────────────────────────────────────────── */
+.alert {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  line-height: 1.4;
+  margin: var(--space-md) 0;
+}
+
+.alert--warning {
+  background: var(--tox-warn-glow);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: var(--tox-warn);
+}
+
+.alert--info {
+  background: var(--tox-zen-glow);
+  border: 1px solid rgba(6, 182, 212, 0.3);
+  color: var(--tox-zen);
+}
+
+.alert--danger {
+  background: var(--tox-danger-glow);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: var(--tox-danger);
+}
+
+.alert-retry-btn {
+  margin-top: var(--space-sm);
+  padding: 6px 12px;
+  background: var(--tox-danger);
+  color: #fff;
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.15s ease;
+}
+
+.alert-retry-btn:hover:not(:disabled) {
+  background: #f87171;
+  transform: translateY(-1px);
+}
+
+.alert-retry-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ─── Confidence Bar ─────────────────────────────────────────────────────────── */
+.confidence-bar {
+  height: 4px;
+  background: var(--tox-border);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: var(--space-xs);
+}
+
+.confidence-bar__fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
