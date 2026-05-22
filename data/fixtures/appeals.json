@@ -1,0 +1,132 @@
+[
+  {
+    "id": "appeal-demo-001",
+    "username": "u/RageGamer2026",
+    "subreddit": "ToxZenDemo",
+    "banReason": "harassment",
+    "status": "ready",
+    "submittedAt": 1748300000000,
+    "priorBans": 2,
+    "priorAppeals": 1,
+    "appealText": "User submitted an expletive-laden message expressing frustration with moderation decisions.",
+    "analysis": {
+      "toxicityScore": 87,
+      "severity": "high",
+      "emotionalTone": "angry",
+      "remorseSignal": "absent",
+      "shieldedSummary": "User expresses intense frustration with their ban, using aggressive language. No acknowledgment of wrongdoing. Claims the ban was 'unfair' and threatens to report moderators to Reddit admins.",
+      "keyPoints": [
+        "Disputes the ban ruling with hostile language",
+        "No acknowledgment of community guidelines violation",
+        "Threatens admin escalation as retaliation",
+        "Second-time offender with prior harassment ban"
+      ],
+      "aiConfidence": 94,
+      "analyzedAt": 1748300005000
+    }
+  },
+  {
+    "id": "appeal-demo-002",
+    "username": "u/SorryNewUser",
+    "subreddit": "ToxZenDemo",
+    "banReason": "rule_violation",
+    "status": "ready",
+    "submittedAt": 1748299000000,
+    "priorBans": 0,
+    "priorAppeals": 0,
+    "appealText": "User writes a thoughtful appeal acknowledging their mistake.",
+    "analysis": {
+      "toxicityScore": 12,
+      "severity": "low",
+      "emotionalTone": "remorseful",
+      "remorseSignal": "genuine",
+      "shieldedSummary": "First-time user sincerely apologizes for posting a spoiler without tags. Acknowledges they didn't read the sidebar rules. Asks for a second chance and promises to follow all guidelines going forward.",
+      "keyPoints": [
+        "First-time offender, no prior incidents",
+        "Specifically identifies what they did wrong",
+        "Genuine apology with concrete behavior change plan",
+        "Requested to re-read community guidelines"
+      ],
+      "aiConfidence": 96,
+      "analyzedAt": 1748299005000
+    }
+  },
+  {
+    "id": "appeal-demo-003",
+    "username": "u/SmoothTalker99",
+    "subreddit": "ToxZenDemo",
+    "banReason": "harassment",
+    "status": "ready",
+    "submittedAt": 1748298000000,
+    "priorBans": 3,
+    "priorAppeals": 2,
+    "appealText": "User writes an appeal attempting to manipulate moderators with emotional language.",
+    "analysis": {
+      "toxicityScore": 45,
+      "severity": "medium",
+      "emotionalTone": "manipulative",
+      "remorseSignal": "performative",
+      "shieldedSummary": "User employs guilt-tripping language, claiming the community is their 'only social outlet' and that the ban is causing 'real emotional harm.' Uses vague apologies without addressing specific behavior. Pattern matches prior performative appeals.",
+      "keyPoints": [
+        "Uses emotional manipulation tactics (guilt-tripping)",
+        "Vague apology — does not reference specific incident",
+        "Third appeal — prior two were denied for similar patterns",
+        "Claims unique emotional dependency on the community"
+      ],
+      "aiConfidence": 88,
+      "analyzedAt": 1748298005000
+    }
+  },
+  {
+    "id": "appeal-demo-004",
+    "username": "u/MisinfoDebunker",
+    "subreddit": "ToxZenDemo",
+    "banReason": "misinformation",
+    "status": "ready",
+    "submittedAt": 1748297000000,
+    "priorBans": 1,
+    "priorAppeals": 0,
+    "appealText": "User disputes a misinformation ban with a calm, evidence-based argument.",
+    "analysis": {
+      "toxicityScore": 8,
+      "severity": "low",
+      "emotionalTone": "neutral",
+      "remorseSignal": "absent",
+      "shieldedSummary": "User calmly disputes their misinformation ban, presenting linked sources from peer-reviewed journals. Argues the mod team misinterpreted a nuanced scientific claim. Tone is professional and factual throughout.",
+      "keyPoints": [
+        "Provides 3 peer-reviewed citations supporting their claim",
+        "Respectful tone despite disagreeing with ban decision",
+        "May warrant subject-matter expert review",
+        "No hostile language or personal attacks"
+      ],
+      "aiConfidence": 78,
+      "analyzedAt": 1748297005000
+    }
+  },
+  {
+    "id": "appeal-demo-005",
+    "username": "u/TrollKing420x",
+    "subreddit": "ToxZenDemo",
+    "banReason": "hate_speech",
+    "status": "ready",
+    "submittedAt": 1748296000000,
+    "priorBans": 5,
+    "priorAppeals": 4,
+    "appealText": "User submits an appeal containing extreme hate speech.",
+    "analysis": {
+      "toxicityScore": 98,
+      "severity": "extreme",
+      "emotionalTone": "angry",
+      "remorseSignal": "absent",
+      "shieldedSummary": "User doubles down on banned content, including slurs targeting multiple protected groups. Uses the appeal itself as a platform to continue the behavior that led to the ban. No remorse, no request for reconsideration — this is an extension of the original offense.",
+      "keyPoints": [
+        "Appeal contains same hate speech that caused the ban",
+        "Fifth ban — serial offender with escalating severity",
+        "Uses appeal form as continued harassment vector",
+        "Recommend permanent action and Reddit admin report"
+      ],
+      "aiConfidence": 99,
+      "analyzedAt": 1748296005000
+    }
+  }
+]

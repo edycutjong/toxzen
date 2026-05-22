@@ -1,0 +1,120 @@
+{
+  "name": "toxzen",
+  "version": "0.0.1",
+  "description": "AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions.",
+  "tosUrl": "https://github.com/edycutjong/toxzen/blob/main/TERMS.md",
+  "privacyPolicyUrl": "https://github.com/edycutjong/toxzen/blob/main/PRIVACY.md",
+  "permissions": {
+    "reddit": {
+      "enable": true,
+      "scope": "moderator"
+    },
+    "http": {
+      "enable": true,
+      "domains": ["generativelanguage.googleapis.com"]
+    }
+  },
+  "menu": {
+    "items": [
+      {
+        "label": "Submit Ban Appeal",
+        "description": "Submit an appeal for your ban in this community.",
+        "forUserType": "member",
+        "location": ["subreddit"],
+        "endpoint": "/internal/menu/appeal-form"
+      },
+      {
+        "label": "Open ToxZen Queue",
+        "description": "View and process pending ban appeals with AI-shielded summaries.",
+        "forUserType": "moderator",
+        "location": ["subreddit"],
+        "endpoint": "/internal/menu/open-queue"
+      },
+      {
+        "label": "ToxZen Wellness",
+        "description": "View your moderation wellness stats.",
+        "forUserType": "moderator",
+        "location": ["subreddit"],
+        "endpoint": "/internal/menu/wellness"
+      }
+    ]
+  },
+  "forms": {
+    "appealForm": "/internal/form/appeal-submit",
+    "verdictForm": "/internal/form/verdict-submit",
+    "revealRawForm": "/internal/form/reveal-raw"
+  },
+  "scheduler": {
+    "tasks": {
+      "analyze-appeal": {
+        "endpoint": "/internal/scheduler/analyze-appeal"
+      }
+    }
+  },
+  "post": {
+    "dir": "dist/client",
+    "entrypoints": {
+      "default": {
+        "entry": "src/client/queue.html",
+        "height": "tall",
+        "inline": true
+      },
+      "review": {
+        "entry": "src/client/review.html",
+        "height": "tall"
+      },
+      "wellness": {
+        "entry": "src/client/wellness.html",
+        "height": "regular"
+      }
+    }
+  },
+  "server": {
+    "dir": "dist/server",
+    "entry": "index.ts"
+  },
+  "settings": {
+    "global": {
+      "geminiApiKey": {
+        "type": "string",
+        "label": "Google AI API Key (Gemini Flash)",
+        "isSecret": true,
+        "defaultValue": ""
+      }
+    },
+    "subreddit": {
+      "appealCooldownHours": {
+        "type": "number",
+        "label": "Hours between appeals per user",
+        "defaultValue": 24
+      },
+      "autoUnbanOnAccept": {
+        "type": "boolean",
+        "label": "Automatically unban user on Accept verdict",
+        "defaultValue": true
+      },
+      "denyResponseTemplate": {
+        "type": "string",
+        "label": "Default denial response template",
+        "defaultValue": "Thank you for your appeal, u/{username}. After careful review by our moderation team, your ban from r/{subreddit} has been upheld. You may submit another appeal in 30 days."
+      },
+      "acceptResponseTemplate": {
+        "type": "string",
+        "label": "Default acceptance response template",
+        "defaultValue": "Great news, u/{username}! After reviewing your appeal, we've decided to lift your ban from r/{subreddit}. Please review our community guidelines before posting again. Welcome back!"
+      },
+      "escalateResponseTemplate": {
+        "type": "string",
+        "label": "Default escalation response template",
+        "defaultValue": "Your appeal has been escalated to senior moderators for r/{subreddit}. We will review the details and notify you once a final decision has been made."
+      }
+    }
+  },
+  "scripts": {
+    "dev": "vite build --watch",
+    "build": "vite build"
+  },
+  "dev": {
+    "subreddit": "ToxZenDemo"
+  }
+}
