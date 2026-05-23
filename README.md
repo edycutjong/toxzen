@@ -2,8 +2,7 @@
   <h1>ToxZen 🧘</h1>
   <p><em>AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.</em></p>
 
-  <!-- TODO: Generate docs/readme-hero.png with /generate-app-icons or generate_image -->
-  <!-- <img src="docs/readme-hero.png" alt="ToxZen" width="100%"> -->
+  <img src="docs/assets/readme-hero.png" alt="ToxZen" width="100%">
 
   <br/>
 
@@ -24,8 +23,7 @@
 
 ## 📸 See it in Action
 
-<!-- TODO: Generate docs/readme.png with a demo screenshot -->
-<!-- <img src="docs/readme.png" alt="ToxZen Demo" width="100%"> -->
+<img src="docs/assets/devpost-gallery.png" alt="ToxZen Demo" width="100%">
 
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
