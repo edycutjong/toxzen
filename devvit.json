@@ -1,9 +1,5 @@
 {
-  "name": "toxzen",
-  "version": "0.0.1",
-  "description": "AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions.",
-  "tosUrl": "https://github.com/edycutjong/toxzen/blob/main/TERMS.md",
-  "privacyPolicyUrl": "https://github.com/edycutjong/toxzen/blob/main/PRIVACY.md",
+  "name": "toxzen-app",
   "permissions": {
     "reddit": {
       "enable": true,
@@ -11,7 +7,9 @@
     },
     "http": {
       "enable": true,
-      "domains": ["generativelanguage.googleapis.com"]
+      "domains": [
+        "generativelanguage.googleapis.com"
+      ]
     }
   },
   "menu": {
@@ -19,22 +17,28 @@
       {
         "label": "Submit Ban Appeal",
         "description": "Submit an appeal for your ban in this community.",
-        "forUserType": "member",
-        "location": ["subreddit"],
+        "forUserType": "user",
+        "location": [
+          "subreddit"
+        ],
         "endpoint": "/internal/menu/appeal-form"
       },
       {
         "label": "Open ToxZen Queue",
         "description": "View and process pending ban appeals with AI-shielded summaries.",
         "forUserType": "moderator",
-        "location": ["subreddit"],
+        "location": [
+          "subreddit"
+        ],
         "endpoint": "/internal/menu/open-queue"
       },
       {
         "label": "ToxZen Wellness",
         "description": "View your moderation wellness stats.",
         "forUserType": "moderator",
-        "location": ["subreddit"],
+        "location": [
+          "subreddit"
+        ],
         "endpoint": "/internal/menu/wellness"
       }
     ]
@@ -55,31 +59,30 @@
     "dir": "dist/client",
     "entrypoints": {
       "default": {
-        "entry": "src/client/queue.html",
+        "entry": "queue.html",
         "height": "tall",
         "inline": true
       },
       "review": {
-        "entry": "src/client/review.html",
+        "entry": "review.html",
         "height": "tall"
       },
       "wellness": {
-        "entry": "src/client/wellness.html",
+        "entry": "wellness.html",
         "height": "regular"
       }
     }
   },
   "server": {
     "dir": "dist/server",
-    "entry": "index.ts"
+    "entry": "index.cjs"
   },
   "settings": {
     "global": {
       "geminiApiKey": {
         "type": "string",
         "label": "Google AI API Key (Gemini Flash)",
-        "isSecret": true,
-        "defaultValue": ""
+        "isSecret": true
       }
     },
     "subreddit": {
@@ -115,6 +118,6 @@
     "build": "vite build"
   },
   "dev": {
-    "subreddit": "ToxZenDemo"
+    "subreddit": "toxzen_app_dev"
   }
 }

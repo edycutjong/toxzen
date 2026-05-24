@@ -27,7 +27,7 @@
   },
   {
     "id": "appeal-demo-002",
-    "username": "u/SorryNewUser",
+    "username": "u/NewMovieFan",
     "subreddit": "ToxZenDemo",
     "banReason": "rule_violation",
     "status": "ready",
@@ -53,7 +53,7 @@
   },
   {
     "id": "appeal-demo-003",
-    "username": "u/SmoothTalker99",
+    "username": "u/DebateKing99",
     "subreddit": "ToxZenDemo",
     "banReason": "harassment",
     "status": "ready",
@@ -79,7 +79,7 @@
   },
   {
     "id": "appeal-demo-004",
-    "username": "u/MisinfoDebunker",
+    "username": "u/ScienceDisputer",
     "subreddit": "ToxZenDemo",
     "banReason": "misinformation",
     "status": "ready",
@@ -105,7 +105,7 @@
   },
   {
     "id": "appeal-demo-005",
-    "username": "u/TrollKing420x",
+    "username": "u/BannedAgain404",
     "subreddit": "ToxZenDemo",
     "banReason": "hate_speech",
     "status": "ready",

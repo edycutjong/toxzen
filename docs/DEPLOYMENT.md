@@ -48,7 +48,7 @@ npx devvit upload
 *Note: This command reads configuration settings directly from [devvit.json](file:///Users/edycu/Projects/Hackathon/ToxZen/devvit.json).*
 
 ### 4. Install the App on your Subreddit
-Install the uploaded version on your test subreddit (e.g., `r/ToxZenDemo`).
+Install the uploaded version on your test subreddit (e.g., `r/toxzen_app_dev`).
 ```bash
 npx devvit install <subreddit_name>
 ```

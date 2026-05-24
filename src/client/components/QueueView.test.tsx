@@ -27,6 +27,7 @@ describe('QueueView', () => {
         error={null}
         onSelectAppeal={() => {}}
         onOpenWellness={() => {}}
+        onSeedDemoData={() => {}}
       />
     );
 
@@ -42,6 +43,7 @@ describe('QueueView', () => {
         error="Network timeout"
         onSelectAppeal={() => {}}
         onOpenWellness={() => {}}
+        onSeedDemoData={() => {}}
       />
     );
 
@@ -57,6 +59,7 @@ describe('QueueView', () => {
         error={null}
         onSelectAppeal={() => {}}
         onOpenWellness={() => {}}
+        onSeedDemoData={() => {}}
       />
     );
 
@@ -136,6 +139,7 @@ describe('QueueView', () => {
         error={null}
         onSelectAppeal={onSelectAppeal}
         onOpenWellness={onOpenWellness}
+        onSeedDemoData={() => {}}
       />
     );
 
@@ -195,6 +199,7 @@ describe('QueueView', () => {
         error={null}
         onSelectAppeal={() => {}}
         onOpenWellness={() => {}}
+        onSeedDemoData={() => {}}
       />
     );
 
@@ -206,5 +211,24 @@ describe('QueueView', () => {
     
     // completed successful ones should not render
     expect(screen.queryByText('u/user_success_reddit')).toBeNull();
+  });
+
+  it('calls onSeedDemoData when clicking seed button in empty state', () => {
+    const onSeedDemoData = vi.fn();
+    render(
+      <QueueView
+        appeals={[]}
+        stats={mockStats}
+        loading={false}
+        error={null}
+        onSelectAppeal={() => {}}
+        onOpenWellness={() => {}}
+        onSeedDemoData={onSeedDemoData}
+      />
+    );
+
+    const seedBtn = screen.getByText('🌱 Seed Demo Data');
+    fireEvent.click(seedBtn);
+    expect(onSeedDemoData).toHaveBeenCalledOnce();
   });
 });

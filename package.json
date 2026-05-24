@@ -1,6 +1,6 @@
 {
-  "name": "toxzen",
-  "version": "0.0.1",
+  "name": "toxzen-app",
+  "version": "0.0.0",
   "private": true,
   "description": "AI-shielded ban appeal processor for Reddit moderators",
   "type": "module",
@@ -14,8 +14,8 @@
     "ci": "npm run typecheck && npm run test:coverage && npm run build"
   },
   "dependencies": {
-    "@devvit/start": "latest",
-    "@devvit/web": "^0.12.24",
+    "@devvit/start": "0.12.24",
+    "@devvit/web": "0.12.24",
     "hono": "^4.7.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -33,5 +33,6 @@
   },
   "overrides": {
     "protobufjs": "^7.5.8"
-  }
+  },
+  "license": "BSD-3-Clause"
 }

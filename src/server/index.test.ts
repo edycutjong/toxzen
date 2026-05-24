@@ -1,5 +1,6 @@
 import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import app from './index.js';
+const nodeListener = (app as any).nodeListener;
 import type { AppealRecord, DailyStats } from '../shared/types.js';
 
 // ─── Mock Devvit SDK Services ────────────────────────────────────────────────
@@ -8,6 +9,7 @@ const { mockRedis, mockScheduler, mockSettings, mockContext, mockReddit } = vi.h
     mockRedis: {
       get: vi.fn(),
       set: vi.fn(),
+      del: vi.fn(),
       zAdd: vi.fn(),
       zRange: vi.fn(),
       zRem: vi.fn(),
@@ -65,6 +67,13 @@ describe('ToxZen Hono Server API Routes', () => {
 
     mockRedis.set.mockImplementation(async (key: string, value: string) => {
       store[key] = value;
+      return undefined;
+    });
+
+    mockRedis.del.mockImplementation(async (...keys: string[]) => {
+      for (const k of keys) {
+        delete store[k];
+      }
       return undefined;
     });
 
@@ -315,6 +324,49 @@ describe('ToxZen Hono Server API Routes', () => {
       expect(json.showToast.appearance).toBe('neutral');
       expect(json.showToast.text).toContain('You submitted an appeal');
       expect(json.showToast.text).toContain('23h');
+    });
+
+    it('global error handler returns neutral toast on internal route error', async () => {
+      Object.defineProperty(mockContext, 'subredditName', {
+        get: () => { throw new Error('Test internal error'); },
+        configurable: true
+      });
+
+      try {
+        const res = await app.request('/internal/menu/open-queue', {
+          method: 'POST',
+        });
+        expect(res.status).toBe(200);
+        const json = await res.json();
+        expect(json.showToast.text).toBe('Error: Test internal error');
+        expect(json.showToast.appearance).toBe('neutral');
+      } finally {
+        Object.defineProperty(mockContext, 'subredditName', {
+          value: 'ToxZenDemo',
+          writable: true,
+          configurable: true
+        });
+      }
+    });
+
+    it('global error handler returns 500 status on external/API route error', async () => {
+      Object.defineProperty(mockContext, 'subredditName', {
+        get: () => { throw new Error('Test API error'); },
+        configurable: true
+      });
+
+      try {
+        const res = await app.request('/api/stats');
+        expect(res.status).toBe(500);
+        const json = await res.json();
+        expect(json.error).toBe('Test API error');
+      } finally {
+        Object.defineProperty(mockContext, 'subredditName', {
+          value: 'ToxZenDemo',
+          writable: true,
+          configurable: true
+        });
+      }
     });
   });
 
@@ -1892,6 +1944,130 @@ describe('ToxZen Hono Server API Routes', () => {
         expect(json.appeal.verdict.redditActionStatus).toBe('failed');
         expect(json.appeal.verdict.errorMessage).toBe('Unknown error');
       });
+    });
+  });
+
+  describe('Seed API Endpoint', () => {
+    it('POST /api/seed seeds demo data and resets daily stats', async () => {
+      // Setup: Seed an existing demo appeal to test clearing
+      store['appeal:ToxZenDemo:appeal-demo-old'] = JSON.stringify({
+        id: 'appeal-demo-old',
+        subreddit: 'ToxZenDemo',
+        status: 'ready',
+      });
+      store['raw:ToxZenDemo:appeal-demo-old'] = 'Old demo raw text';
+      zSets['appeals:ToxZenDemo:pending'] = [
+        { member: 'appeal-demo-old', score: Date.now() },
+      ];
+
+      const res = await app.request('/api/seed', {
+        method: 'POST',
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+
+      // Verify old demo appeal was removed
+      expect(store['appeal:ToxZenDemo:appeal-demo-old']).toBeUndefined();
+      expect(store['raw:ToxZenDemo:appeal-demo-old']).toBeUndefined();
+
+      // Verify new demo appeals were created
+      const storedAppeals = zSets['appeals:ToxZenDemo:pending'] || [];
+      expect(storedAppeals.length).toBeGreaterThan(0);
+
+      // Check one seeded appeal
+      const sampleId = 'appeal-demo-001';
+      expect(store[`appeal:ToxZenDemo:${sampleId}`]).toBeDefined();
+      expect(store[`raw:ToxZenDemo:${sampleId}`]).toBeDefined();
+
+      // Verify daily stats were reset
+      const todayKey = new Date().toISOString().split('T')[0];
+      const statsKey = `stats:ToxZenDemo:daily:${todayKey}`;
+      expect(store[statsKey]).toBeDefined();
+      const stats = JSON.parse(store[statsKey]);
+      expect(stats.processed).toBe(0);
+      expect(stats.accepted).toBe(0);
+    });
+  });
+
+  describe('Node Server Adapter', () => {
+    it('nodeListener handles GET requests correctly', async () => {
+      if (!nodeListener) return;
+      
+      const reqMock: any = {
+        method: 'GET',
+        url: '/api/stats',
+        headers: {
+          host: 'localhost',
+        },
+        [Symbol.asyncIterator]: async function* () {}
+      };
+
+      const resHeaders: Record<string, string> = {};
+      const resMock: any = {
+        statusCode: 200,
+        setHeader: (key: string, val: string) => {
+          resHeaders[key] = val;
+        },
+        write: vi.fn(),
+        end: vi.fn(),
+      };
+
+      await nodeListener(reqMock, resMock);
+
+      expect(resMock.statusCode).toBe(200);
+      expect(resMock.write).toHaveBeenCalled();
+      expect(resMock.end).toHaveBeenCalled();
+    });
+
+    it('nodeListener handles POST requests with body stream correctly', async () => {
+      if (!nodeListener) return;
+
+      const reqMock: any = {
+        method: 'POST',
+        url: '/api/seed',
+        headers: {
+          host: 'localhost',
+          'content-type': 'application/json',
+        },
+        [Symbol.asyncIterator]: async function* () {
+          yield Buffer.from(JSON.stringify({}));
+        }
+      };
+
+      const resHeaders: Record<string, string> = {};
+      const resMock: any = {
+        statusCode: 200,
+        setHeader: (key: string, val: string) => {
+          resHeaders[key] = val;
+        },
+        write: vi.fn(),
+        end: vi.fn(),
+      };
+
+      await nodeListener(reqMock, resMock);
+
+      expect(resMock.statusCode).toBe(200);
+      expect(resMock.write).toHaveBeenCalled();
+      expect(resMock.end).toHaveBeenCalled();
+    });
+
+    it('nodeListener handles request listener errors and returns 500 status', async () => {
+      if (!nodeListener) return;
+
+      // Passing null req to force exception
+      const resMock: any = {
+        statusCode: 200,
+        setHeader: vi.fn(),
+        write: vi.fn(),
+        end: vi.fn(),
+      };
+
+      await nodeListener(null, resMock);
+
+      expect(resMock.statusCode).toBe(500);
+      expect(resMock.end).toHaveBeenCalledWith('Internal Server Error');
     });
   });
 });

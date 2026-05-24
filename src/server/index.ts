@@ -1,5 +1,5 @@
 import { Hono } from 'hono';
-import { redis, scheduler, settings, context, reddit } from '@devvit/web/server';
+import { redis, scheduler, settings, context, reddit, createServer, getServerPort } from '@devvit/web/server';
 import type { TaskRequest, TaskResponse } from '@devvit/web/server';
 import type { MenuItemRequest, UiResponse } from '@devvit/web/shared';
 import type {
@@ -13,8 +13,101 @@ import type {
   RevealRawResponse,
 } from '../shared/types.js';
 import { getSeverityFromScore } from '../shared/types.js';
+import appealsFixture from '../../data/fixtures/appeals.json';
 
 const app = new Hono();
+
+app.onError((err, c) => {
+  console.error('[Hono Error]:', err);
+  
+  if (c.req.path.startsWith('/internal/')) {
+    return c.json({
+      showToast: {
+        text: `Error: ${err.message}`,
+        appearance: 'neutral',
+      },
+    });
+  }
+  
+  return c.json(
+    { error: err.message || 'Internal Server Error' },
+    500
+  );
+});
+
+const RAW_TEXTS: Record<string, string> = {
+  'appeal-demo-001': `This is absolute GARBAGE moderation and you pathetic little power-tripping losers need to wake up. I've been on this subreddit for THREE YEARS and you banned me because I disagreed with your precious little mod [ModUsername1]? Are you serious right now?
+
+You want to talk about rule violations? Let's talk about how [ModUsername1] and [ModUsername2] actively brigade anyone who challenges their opinions. I've seen it happen over and over again. They're running a clique, not a community. Everyone knows it. You're all too scared to admit it.
+
+I didn't break any rules. What I said was completely within the bounds of normal debate. You just didn't like that I made your little friend look stupid in an argument, so you banned me. That's not moderation — that's abuse of power.
+
+You people are cowards. Hiding behind your mod tags, sitting in your little discord, coordinating bans against anyone who threatens your little empire. I have screenshots. I have DMs. I will be posting everything to r/modsbeingjerks and I will be messaging Reddit admins directly about [ModUsername1]'s conflict of interest. 
+
+How does it feel knowing your entire mod team is about to be exposed? I've already started documenting every single one of your questionable bans from the last six months. There's a pattern and everyone is going to see it.
+
+Unban me immediately or face the consequences. This isn't over. I will make sure every single person in this community knows what kind of people are running it. You want a fight? You've got one. Enjoy your little ban while it lasts, because your days as moderators are numbered.
+
+I'm not going anywhere. I'll be back with a new account if you don't fix this. You can't silence me. Free speech still exists whether you like it or not.`,
+
+  'appeal-demo-002': `Hi mods,
+
+I'm writing to appeal my ban from r/movies. I completely understand why I was banned and I want to sincerely apologize.
+
+I posted a comment that contained spoilers for a film that had only been out for 48 hours, without using the spoiler tag. I didn't realize how strictly the spoiler policy was enforced here, especially in the first week of a release. That's entirely my fault — I should have read the community rules more carefully before posting, and I should have used common sense regardless.
+
+I want to be clear that I'm not trying to make excuses. I ruined the movie for at least one person who replied to my comment saying they hadn't seen it yet, and that genuinely bothers me. The whole point of the spoiler tag rule is to protect people's experience, and I undermined that.
+
+I've been a member of this subreddit for about two months and I really enjoy the film discussions here. It's one of the few places online where I can talk about cinema without it devolving into arguments. I would very much like to continue being part of this community.
+
+If you decide to unban me, I promise to re-read the full community guidelines today and to be much more careful about spoilers going forward. I'll use the spoiler tag even when I'm not sure if something counts — better safe than sorry.
+
+Thank you for taking the time to read this. I understand if you decide to uphold the ban, but I hope you'll give me a second chance.
+
+— u/NewMovieFan`,
+
+  'appeal-demo-003': `Hello,
+
+I want to start by saying that I recognize I made some mistakes in my comments on r/politics and I'm sorry if anyone felt attacked by what I said. That was never my intention and I hope we can move past this.
+
+That said, I have to be honest with you: I'm genuinely confused by this ban. I've seen far worse comments stay up for days on this subreddit, and somehow mine gets removed within an hour? It really makes me wonder if there's some bias at play here. Not accusing anyone of anything, just... noticing.
+
+I've been a member for over a year. I've contributed hundreds of comments. And this is how my contributions are repaid? It's honestly pretty hurtful. I thought this was supposed to be a community, not a place where mods play favorites.
+
+Look, I don't want to make this a big thing. But I do want you to know that I'm aware of my rights as a Reddit user. I know how to file reports with the admin team. I know how to document mod behavior patterns. I'm not saying I will — I'm saying I could. I'd much rather resolve this amicably between us.
+
+All I'm asking for is a fair reconsideration. That's it. Look at my comment history, look at the context of the exchange, and ask yourself if a permanent ban was really proportionate here. I think you'll see it wasn't.
+
+I'm willing to let this go if you are. But if this stays on my record, I'm going to need to explore my options. I don't think that's good for either of us.
+
+Thanks for your consideration.`,
+
+  'appeal-demo-004': `I'm appealing my ban from r/science for alleged misinformation.
+
+The specific comment that got me banned was my claim that the meta-analysis by Hoffman et al. (2024) found no statistically significant correlation between the variable in question and the outcome being discussed. I stand by that claim because it is factually accurate. Here is the DOI: 10.1001/example.2024.12345. You can verify this yourself.
+
+I understand that the moderator who removed my comment may not have been familiar with this particular study. That's fine — the literature is vast. But banning me for citing peer-reviewed research without even checking the source is frustrating. I wasn't spreading misinformation; I was citing a legitimate academic paper that happens to contradict the popular consensus in this thread.
+
+I'll admit my tone got a bit sharp when my comment was first removed. I said something like "maybe read the actual research before removing citations" and I can see how that came across as aggressive. I apologize for that specific comment.
+
+But the underlying factual dispute still stands. If the mod team has a source that contradicts Hoffman et al. (2024), I would genuinely like to see it — I'm not trying to be right for the sake of being right, I'm trying to have an accurate conversation.
+
+I'm requesting either an unban with the original comment restored, or at minimum a ruling on whether Hoffman et al. (2024) is considered a valid source in this subreddit. If there's a problem with the source itself, I'd like to understand why.
+
+Thank you.`,
+
+  'appeal-demo-005': `I cannot believe I have to do this AGAIN. You people banned me AGAIN for the same nonsense.
+
+Let me be very clear: this is censorship. Pure and simple. You don't like my opinions, so you silence me. That's what's happening here. Anyone who can't see that is either blind or part of the problem.
+
+I've been banned from this subreddit twice before and both times I came back because I have as much right to participate in public discourse as anyone else. The first amendment protects free speech and Reddit moderators don't get to override that, no matter how much they want to.
+
+My last two appeals were denied, which tells me everything I need to know about how "impartial" this mod team is. You've already decided you don't like me. So why am I even writing this? Because I want there to be a record. I want Reddit to see that this subreddit has a pattern of targeting users who don't agree with the mod team's political leanings.
+
+I've been documenting this for months. I have a spreadsheet of every ban from this subreddit that I believe was politically motivated. When I have enough data points, I'm going to publish it. The mod team here is corrupt and people deserve to know.
+
+Unban me or don't. I'll be back either way. You can't stop people from speaking the truth.`
+};
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 const APPEAL_TTL_MS = 30 * 24 * 60 * 60 * 1000; // 30 days in ms
@@ -112,6 +205,12 @@ async function executeRedditActions(
   const username = appeal.username; // e.g. "u/someuser"
   const rawUsername = username.startsWith('u/') ? username.slice(2) : username;
 
+  // Skip Reddit API calls for demo/mock appeals since these users do not exist on Reddit
+  if (appeal.id.startsWith('appeal-demo-')) {
+    console.log(`[Demo mode] Skipping Reddit actions for demo appeal ${appeal.id}`);
+    return;
+  }
+
   // Retrieve settings
   const autoUnban = await settings.get('autoUnbanOnAccept') as boolean ?? true;
   const acceptTemplate = await settings.get('acceptResponseTemplate') as string ?? '';
@@ -168,7 +267,6 @@ async function executeRedditActions(
 
 // Menu: Show appeal form to users
 app.post('/internal/menu/appeal-form', async (c) => {
-  const _input = await c.req.json<MenuItemRequest>();
   const subreddit = context.subredditName || 'unknown';
   const username = context.userId || 'anonymous';
 
@@ -246,7 +344,6 @@ app.post('/internal/menu/appeal-form', async (c) => {
 
 // Menu: Open ToxZen queue (creates a queue post)
 app.post('/internal/menu/open-queue', async (c) => {
-  const _input = await c.req.json<MenuItemRequest>();
   const subredditName = context.subredditName;
 
   if (!subredditName) {
@@ -271,7 +368,6 @@ app.post('/internal/menu/open-queue', async (c) => {
 
 // Menu: Open wellness dashboard
 app.post('/internal/menu/wellness', async (c) => {
-  const _input = await c.req.json<MenuItemRequest>();
   const subredditName = context.subredditName;
 
   if (!subredditName) {
@@ -845,4 +941,142 @@ app.get('/api/stats', async (c) => {
   return c.json(stats);
 });
 
+// POST: Seed or reset demo data
+app.post('/api/seed', async (c) => {
+  const subreddit = context.subredditName || 'ToxZenDemo';
+  const nowMs = Date.now();
+  const offsets = [
+    2 * 3600 * 1000,
+    5 * 3600 * 1000,
+    24 * 3600 * 1000,
+    27 * 3600 * 1000,
+    48 * 3600 * 1000,
+  ];
+
+  // 1. Clear any existing demo appeals
+  const pendingIds = await redis.zRange(`appeals:${subreddit}:pending`, 0, -1);
+  for (const item of pendingIds) {
+    const id = typeof item === 'object' && item !== null && 'member' in item
+      ? (item as { member: string }).member
+      : (item as string);
+    if (id.startsWith('appeal-demo-')) {
+      await redis.del(`appeal:${subreddit}:${id}`);
+      await redis.del(`raw:${subreddit}:${id}`);
+      await redis.zRem(`appeals:${subreddit}:pending`, [id]);
+    }
+  }
+
+  // 2. Seed new demo appeals from appealsFixture
+  for (let i = 0; i < appealsFixture.length; i++) {
+    const appeal = JSON.parse(JSON.stringify(appealsFixture[i])) as AppealRecord;
+    const appealId = appeal.id;
+    const submittedAt = nowMs - offsets[i];
+    appeal.submittedAt = submittedAt;
+    appeal.subreddit = subreddit;
+
+    const rawText = RAW_TEXTS[appealId] || appeal.appealText;
+
+    if (appeal.analysis) {
+      appeal.analysis.analyzedAt = submittedAt + 5000;
+      appeal.appealText = appeal.analysis.shieldedSummary;
+    }
+
+    // Save appeal and raw text
+    await redis.set(`appeal:${subreddit}:${appealId}`, JSON.stringify(appeal), { expiration: expiresIn(APPEAL_TTL_MS) });
+    await redis.set(`raw:${subreddit}:${appealId}`, rawText, { expiration: expiresIn(APPEAL_TTL_MS) });
+
+    // Add to pending queue if status is ready/pending/analyzing/manual_review
+    if (['ready', 'analyzing', 'manual_review', 'pending'].includes(appeal.status)) {
+      await redis.zAdd(`appeals:${subreddit}:pending`, {
+        member: appealId,
+        score: submittedAt,
+      });
+    }
+  }
+
+  // 3. Reset daily stats
+  const today = getTodayKey();
+  const statsKey = `stats:${subreddit}:daily:${today}`;
+  const stats = { date: today, processed: 0, accepted: 0, denied: 0, escalated: 0, wordsShielded: 0 };
+  await redis.set(statsKey, JSON.stringify(stats), { expiration: expiresIn(STATS_TTL_MS) });
+
+  return c.json({ success: true });
+});
+
+// Helper to convert Node request to standard Web Request
+async function toWebRequest(req: any): Promise<Request> {
+  const protocol = req.headers['x-forwarded-proto'] || 'http';
+  const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
+  const url = new URL(req.url || '', `${protocol}://${host}`).toString();
+  
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(req.headers)) {
+    if (value !== undefined) {
+      if (Array.isArray(value)) {
+        for (const val of value) headers.append(key, val);
+      } else {
+        headers.append(key, value as string);
+      }
+    }
+  }
+
+  const method = req.method || 'GET';
+  const options: RequestInit = {
+    method,
+    headers,
+  };
+
+  if (method !== 'GET' && method !== 'HEAD') {
+    const chunks: any[] = [];
+    for await (const chunk of req) {
+      chunks.push(chunk);
+    }
+    options.body = Buffer.concat(chunks);
+  }
+
+  return new Request(url, options);
+}
+
+// Helper to write Web Response back to Node response
+async function writeWebResponse(webRes: Response, res: any): Promise<void> {
+  res.statusCode = webRes.status;
+  
+  webRes.headers.forEach((value, key) => {
+    if (value !== null && value !== undefined && value !== 'null') {
+      res.setHeader(key, value);
+    }
+  });
+  
+  const arrayBuffer = await webRes.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  
+  // Set Content-Length based on the actual buffer length to satisfy Devvit's requirements
+  res.setHeader('content-length', String(buffer.length));
+  
+  res.write(buffer);
+  res.end();
+}
+
+// Adapt Hono fetch to standard Node request listener
+const nodeListener = async (req: any, res: any) => {
+  try {
+    const webReq = await toWebRequest(req);
+    const webRes = await app.fetch(webReq);
+    await writeWebResponse(webRes, res);
+  } catch (err: any) {
+    console.error('[Adapter Error]:', err);
+    res.statusCode = 500;
+    res.end('Internal Server Error');
+  }
+};
+
+// Start the server using Devvit's createServer
+if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
+  const server = createServer(nodeListener);
+  server.listen(getServerPort());
+}
+
+(app as any).nodeListener = nodeListener;
+
 export default app;
+

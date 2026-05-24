@@ -1,29 +1,23 @@
-<div align="center">
-  <h1>ToxZen 🧘</h1>
-  <p><em>AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.</em></p>
+# ToxZen 🧘
 
-  <img src="docs/assets/readme-hero.png" alt="ToxZen" width="100%">
+*AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.*
 
-  <br/>
+![ToxZen](docs/assets/readme-hero.png)
 
-  [![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
+[![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
 
-  <br/>
-
-  ![Devvit](https://img.shields.io/badge/Devvit_Web-FF4500?style=flat&logo=reddit&logoColor=white)
-  ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
-  ![Hono](https://img.shields.io/badge/Hono-E36002?style=flat&logo=hono&logoColor=white)
-  ![Gemini](https://img.shields.io/badge/Gemini_Flash-4285F4?style=flat&logo=google&logoColor=white)
-  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-  [![CI](https://github.com/edycutjong/toxzen/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/toxzen/actions/workflows/ci.yml)
-
-</div>
+![Devvit](https://img.shields.io/badge/Devvit_Web-FF4500?style=flat&logo=reddit&logoColor=white)
+![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
+![Hono](https://img.shields.io/badge/Hono-E36002?style=flat&logo=hono&logoColor=white)
+![Gemini](https://img.shields.io/badge/Gemini_Flash-4285F4?style=flat&logo=google&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+[![CI](https://github.com/edycutjong/toxzen/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/toxzen/actions/workflows/ci.yml)
 
 ---
 
 ## 📸 See it in Action
 
-<img src="docs/assets/devpost-gallery.png" alt="ToxZen Demo" width="100%">
+![ToxZen Demo](docs/assets/devpost-gallery.png)
 
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
@@ -209,6 +203,4 @@ Built for the [Devpost Mod Tools Migration Hackathon 2026](https://mod-tools-mig
 
 ---
 
-<div align="center">
-  <strong>🧘 Protecting the people who protect your community.</strong>
-</div>
+**🧘 Protecting the people who protect your community.**

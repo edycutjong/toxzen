@@ -66,6 +66,20 @@ export function App() {
     handleBack();
   }, [fetchAppeals, handleBack]);
 
+  // Seed demo data handler
+  const handleSeedDemoData = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await fetch('/api/seed', { method: 'POST' });
+      if (!response.ok) throw new Error('Failed to seed data');
+      await fetchAppeals();
+    } catch (_err) {
+      setError('Failed to seed demo data. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  }, [fetchAppeals]);
+
   // Get selected appeal
   const selectedAppeal = appeals.find(a => a.id === selectedAppealId);
 
@@ -79,6 +93,7 @@ export function App() {
           error={error}
           onSelectAppeal={handleSelectAppeal}
           onOpenWellness={() => setView('wellness')}
+          onSeedDemoData={handleSeedDemoData}
         />
       )}
 

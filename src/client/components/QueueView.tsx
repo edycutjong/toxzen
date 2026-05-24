@@ -9,9 +9,10 @@ interface QueueViewProps {
   error: string | null;
   onSelectAppeal: (id: string) => void;
   onOpenWellness: () => void;
+  onSeedDemoData: () => void;
 }
 
-export function QueueView({ appeals, stats, loading, error, onSelectAppeal, onOpenWellness }: QueueViewProps) {
+export function QueueView({ appeals, stats, loading, error, onSelectAppeal, onOpenWellness, onSeedDemoData }: QueueViewProps) {
   // Filter to actionable appeals (or appeals with failed reddit actions)
   const pendingAppeals = appeals.filter(
     a => a.status === 'ready' || a.status === 'analyzing' || a.status === 'manual_review' || a.status === 'pending' || a.verdict?.redditActionStatus === 'failed'
@@ -61,7 +62,14 @@ export function QueueView({ appeals, stats, loading, error, onSelectAppeal, onOp
         <div className="empty-state">
           <div className="empty-state__icon">✅</div>
           <div className="empty-state__title">All clear.</div>
-          <div className="empty-state__text">No pending ban appeals. Your community is at peace.</div>
+          <div className="empty-state__text" style={{ marginBottom: '16px' }}>No pending ban appeals. Your community is at peace.</div>
+          <button
+            className="back-btn"
+            style={{ width: 'auto', padding: '8px 16px', display: 'inline-flex', alignItems: 'center', gap: '8px' }}
+            onClick={onSeedDemoData}
+          >
+            🌱 Seed Demo Data
+          </button>
         </div>
       )}
 
