@@ -2,7 +2,7 @@
 
 *AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.*
 
-![ToxZen](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/assets/readme-hero.png)
+![ToxZen](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/readme-hero.png)
 
 [![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
 
@@ -17,7 +17,7 @@
 
 ## 📸 See it in Action
 
-![ToxZen Demo](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/assets/devpost-gallery.png)
+![ToxZen Demo](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/og-image.png)
 
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
@@ -156,41 +156,41 @@ CI runs on every push/PR against Node.js `[20, 22, 24]` matrix.
 ToxZen/
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml              # CI pipeline (typecheck + test + build)
-│   │   └── codeql.yml          # Security scanning
-│   └── dependabot.yml          # Dependency updates
+│   │   ├── ci.yml                    # CI pipeline (typecheck + test + build)
+│   │   └── codeql.yml                # Security scanning
+│   └── dependabot.yml                # Dependency updates
 ├── data/
 │   └── fixtures/
-│       └── appeals.json        # 5 seed appeals (demo data)
-├── docs/                       # README assets
+│       └── appeals.json              # 5 seed appeals (demo data)
+├── docs/                             # README assets
 ├── src/
 │   ├── client/
 │   │   ├── components/
-│   │   │   ├── AppealCard.tsx       # Queue list card
-│   │   │   ├── QueueView.tsx        # Appeal queue page
-│   │   │   ├── RevealRawDialog.tsx  # 2-step content warning
-│   │   │   ├── SeverityBadge.tsx    # Color-coded toxicity badge
-│   │   │   ├── ShieldedReview.tsx   # Full appeal review
-│   │   │   ├── VerdictButtons.tsx   # Accept/Deny/Escalate/Reveal
+│   │   │   ├── AppealCard.tsx        # Queue list card
+│   │   │   ├── QueueView.tsx         # Appeal queue page
+│   │   │   ├── RevealRawDialog.tsx   # 2-step content warning
+│   │   │   ├── SeverityBadge.tsx     # Color-coded toxicity badge
+│   │   │   ├── ShieldedReview.tsx    # Full appeal review
+│   │   │   ├── VerdictButtons.tsx    # Accept/Deny/Escalate/Reveal
 │   │   │   └── WellnessDashboard.tsx # Mod wellness stats
-│   │   ├── styles.css           # Dark SOC theme (500+ lines)
-│   │   ├── App.tsx              # Main app with view routing
-│   │   ├── main.tsx             # React entry point
-│   │   ├── queue.html           # Inline Custom Post entry
-│   │   ├── review.html          # Expanded review entry
-│   │   └── wellness.html        # Wellness dashboard entry
+│   │   ├── styles.css                # Dark SOC theme (500+ lines)
+│   │   ├── App.tsx                   # Main app with view routing
+│   │   ├── main.tsx                  # React entry point
+│   │   ├── queue.html                # Inline Custom Post entry
+│   │   ├── review.html               # Expanded review entry
+│   │   └── wellness.html             # Wellness dashboard entry
 │   ├── server/
-│   │   └── index.ts             # Hono server (10 endpoints)
+│   │   └── index.ts                  # Hono server (10 endpoints)
 │   └── shared/
-│       └── types.ts             # TypeScript interfaces
-├── devvit.json                  # Devvit app config
-├── package.json                 # Dependencies & scripts
-├── vite.config.ts               # Vite + React + Devvit plugin
-├── .env.example                 # Environment template
-├── PRIVACY.md                   # Privacy policy
-├── TERMS.md                     # Terms of service
-├── LICENSE                      # MIT
-└── README.md                    # You are here
+│       └── types.ts                  # TypeScript interfaces
+├── devvit.json                       # Devvit app config
+├── package.json                      # Dependencies & scripts
+├── vite.config.ts                    # Vite + React + Devvit plugin
+├── .env.example                      # Environment template
+├── PRIVACY.md                        # Privacy policy
+├── TERMS.md                          # Terms of service
+├── LICENSE                           # MIT
+└── README.md                         # You are here
 ```
 
 ## 📄 License

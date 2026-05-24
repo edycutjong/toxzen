@@ -2,6 +2,7 @@ import { vi, describe, it, expect, beforeEach, afterEach } from 'vitest';
 import app from './index.js';
 const nodeListener = (app as any).nodeListener;
 import type { AppealRecord, DailyStats } from '../shared/types.js';
+import appealsFixture from '../../data/fixtures/appeals.json';
 
 // ─── Mock Devvit SDK Services ────────────────────────────────────────────────
 const { mockRedis, mockScheduler, mockSettings, mockContext, mockReddit } = vi.hoisted(() => {
@@ -360,6 +361,26 @@ describe('ToxZen Hono Server API Routes', () => {
         expect(res.status).toBe(500);
         const json = await res.json();
         expect(json.error).toBe('Test API error');
+      } finally {
+        Object.defineProperty(mockContext, 'subredditName', {
+          value: 'ToxZenDemo',
+          writable: true,
+          configurable: true
+        });
+      }
+    });
+
+    it('global error handler returns 500 status with default fallback message when error message is empty', async () => {
+      Object.defineProperty(mockContext, 'subredditName', {
+        get: () => { throw new Error(''); },
+        configurable: true
+      });
+
+      try {
+        const res = await app.request('/api/stats');
+        expect(res.status).toBe(500);
+        const json = await res.json();
+        expect(json.error).toBe('Internal Server Error');
       } finally {
         Object.defineProperty(mockContext, 'subredditName', {
           value: 'ToxZenDemo',
@@ -2040,6 +2061,53 @@ describe('ToxZen Hono Server API Routes', () => {
 
       // Verify old demo appeal was removed
       expect(store['appeal:ToxZenDemo:appeal-demo-old']).toBeUndefined();
+    });
+
+    it('POST /api/seed falls back to default subreddit when subredditName is empty in context', async () => {
+      mockContext.subredditName = '';
+
+      const res = await app.request('/api/seed', {
+        method: 'POST',
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+
+      // Verify that data is seeded on the default subreddit 'ToxZenDemo'
+      const sampleId = 'appeal-demo-001';
+      expect(store[`appeal:ToxZenDemo:${sampleId}`]).toBeDefined();
+    });
+
+    it('POST /api/seed handles fallback when RAW_TEXTS has no entry for appealId', async () => {
+      // Temporarily push an appeal fixture that has no corresponding raw text in RAW_TEXTS
+      appealsFixture.push({
+        id: 'appeal-demo-noraw',
+        username: 'u/noraw_user',
+        subreddit: 'ToxZenDemo',
+        appealText: 'This is the fallback appeal text that should be used directly since no raw text is in RAW_TEXTS.',
+        banReason: 'other',
+        submittedAt: Date.now(),
+        status: 'ready',
+      } as any);
+
+      try {
+        const res = await app.request('/api/seed', {
+          method: 'POST',
+        });
+
+        expect(res.status).toBe(200);
+        const json = await res.json();
+        expect(json.success).toBe(true);
+
+        // Verify the appeal was created with the default appealText
+        const appealKey = 'appeal:ToxZenDemo:appeal-demo-noraw';
+        expect(store[appealKey]).toBeDefined();
+        const appeal = JSON.parse(store[appealKey]);
+        expect(appeal.appealText).toBe('This is the fallback appeal text that should be used directly since no raw text is in RAW_TEXTS.');
+      } finally {
+        appealsFixture.pop();
+      }
     });
   });
 
