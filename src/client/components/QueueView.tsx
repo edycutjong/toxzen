@@ -31,7 +31,9 @@ export function QueueView({ appeals, stats, loading, error, onSelectAppeal, onOp
       {/* Header */}
       <div className="toxzen-header">
         <span className="toxzen-header__icon">🧘</span>
-        <span className="toxzen-header__title">ToxZen — Ban Appeal Queue</span>
+        <span className="toxzen-header__title">
+          <span className="logo-tox">Tox</span><span className="logo-zen">Zen</span> — Ban Appeal Queue
+        </span>
         <button
           className="back-btn"
           style={{ marginBottom: 0, marginLeft: 'auto' }}

@@ -62,7 +62,7 @@ describe('App', () => {
 
     // Wait for the data to load and render
     await waitFor(() => {
-      expect(screen.getByText('ToxZen — Ban Appeal Queue')).toBeDefined();
+      expect(screen.getByText(/Ban Appeal Queue/)).toBeDefined();
       expect(screen.getByText('u/user_1')).toBeDefined();
       expect(screen.getByText('Today: 5')).toBeDefined();
     });
@@ -97,7 +97,7 @@ describe('App', () => {
     const backBtn = screen.getByText('← Back to Queue');
     fireEvent.click(backBtn);
 
-    expect(screen.getByText('ToxZen — Ban Appeal Queue')).toBeDefined();
+    expect(screen.getByText(/Ban Appeal Queue/)).toBeDefined();
   });
 
   it('handles navigation to review details, submitting a verdict and coming back to queue', async () => {
@@ -149,7 +149,7 @@ describe('App', () => {
 
     // Should return to queue
     await waitFor(() => {
-      expect(screen.getByText('ToxZen — Ban Appeal Queue')).toBeDefined();
+      expect(screen.getByText(/Ban Appeal Queue/)).toBeDefined();
     });
   });
 
@@ -174,7 +174,7 @@ describe('App', () => {
     // selectedAppealId is null, so selectedAppeal is undefined.
     // The render returns empty (no view matches because selectedAppeal is falsy in: view === 'review' && selectedAppeal).
     // Let's verify that the queue is NOT rendered.
-    expect(screen.queryByText('ToxZen — Ban Appeal Queue')).toBeNull();
+    expect(screen.queryByText(/Ban Appeal Queue/)).toBeNull();
   });
 
   it('detects wellness view from URL pathname', async () => {
