@@ -1125,6 +1125,34 @@ describe('ToxZen Hono Server API Routes', () => {
       expect(json.showToast.appearance).toBe('neutral');
       expect(json.showToast.text).toContain('already processed by another mod');
     });
+
+    it('verdict-submit endpoint skips Reddit actions for demo appeals', async () => {
+      const appealId = 'appeal-demo-123';
+      const appealKey = 'appeal:ToxZenDemo:appeal-demo-123';
+      store[appealKey] = JSON.stringify({
+        id: appealId,
+        subreddit: 'ToxZenDemo',
+        status: 'ready',
+        username: 'u/test_user',
+      });
+
+      const res = await app.request('/internal/form/verdict-submit', {
+        method: 'POST',
+        body: JSON.stringify({
+          action: 'accept',
+          appealId,
+          subreddit: 'ToxZenDemo',
+        }),
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.showToast.appearance).toBe('success');
+      
+      const appealData = JSON.parse(store[appealKey]) as AppealRecord;
+      expect(appealData.status).toBe('accepted');
+      expect(appealData.verdict?.redditActionStatus).toBe('success');
+    });
   });
 
   // ─── Client REST APIs ──────────────────────────────────────────────────────
@@ -1989,6 +2017,30 @@ describe('ToxZen Hono Server API Routes', () => {
       expect(stats.processed).toBe(0);
       expect(stats.accepted).toBe(0);
     });
+
+    it('POST /api/seed handles zRange returning member objects when clearing existing appeals', async () => {
+      mockRedis.zRange.mockImplementationOnce(async () => {
+        return [{ member: 'appeal-demo-old', score: Date.now() }] as any;
+      });
+
+      store['appeal:ToxZenDemo:appeal-demo-old'] = JSON.stringify({
+        id: 'appeal-demo-old',
+        subreddit: 'ToxZenDemo',
+        status: 'ready',
+      });
+      store['raw:ToxZenDemo:appeal-demo-old'] = 'Old demo raw text';
+
+      const res = await app.request('/api/seed', {
+        method: 'POST',
+      });
+
+      expect(res.status).toBe(200);
+      const json = await res.json();
+      expect(json.success).toBe(true);
+
+      // Verify old demo appeal was removed
+      expect(store['appeal:ToxZenDemo:appeal-demo-old']).toBeUndefined();
+    });
   });
 
   describe('Node Server Adapter', () => {
@@ -2089,6 +2141,57 @@ describe('ToxZen Hono Server API Routes', () => {
         setHeader: (key: string, val: string) => {
           resHeaders[key] = val;
         },
+        write: vi.fn(),
+        end: vi.fn(),
+      };
+
+      await nodeListener(reqMock, resMock);
+
+      expect(resMock.statusCode).toBe(200);
+      expect(resMock.write).toHaveBeenCalled();
+      expect(resMock.end).toHaveBeenCalled();
+    });
+
+    it('nodeListener handles forwarded headers and fallback URL parsing values correctly', async () => {
+      if (!nodeListener) return;
+
+      const reqMock: any = {
+        method: '',
+        url: '',
+        headers: {
+          'x-forwarded-proto': 'https',
+          'x-forwarded-host': 'forwarded.example.com',
+        },
+        [Symbol.asyncIterator]: async function* () {}
+      };
+
+      const resMock: any = {
+        statusCode: 200,
+        setHeader: vi.fn(),
+        write: vi.fn(),
+        end: vi.fn(),
+      };
+
+      await nodeListener(reqMock, resMock);
+
+      expect(resMock.statusCode).toBe(404);
+      expect(resMock.write).toHaveBeenCalled();
+      expect(resMock.end).toHaveBeenCalled();
+    });
+
+    it('nodeListener handles missing host header with localhost fallback correctly', async () => {
+      if (!nodeListener) return;
+
+      const reqMock: any = {
+        method: 'GET',
+        url: '/api/stats',
+        headers: {},
+        [Symbol.asyncIterator]: async function* () {}
+      };
+
+      const resMock: any = {
+        statusCode: 200,
+        setHeader: vi.fn(),
         write: vi.fn(),
         end: vi.fn(),
       };
