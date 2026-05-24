@@ -2,7 +2,7 @@
 
 *AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.*
 
-![ToxZen](docs/assets/readme-hero.png)
+![ToxZen](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/assets/readme-hero.png)
 
 [![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
 
@@ -17,7 +17,7 @@
 
 ## 📸 See it in Action
 
-![ToxZen Demo](docs/assets/devpost-gallery.png)
+![ToxZen Demo](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/assets/devpost-gallery.png)
 
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
