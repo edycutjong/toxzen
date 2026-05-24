@@ -2,22 +2,22 @@
 
 *AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.*
 
-![ToxZen](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/readme-hero.png)
+![ToxZen](https://github.com/user-attachments/assets/1c603fcc-414f-43e8-977d-8d2fecfc4bbc)
 
 [![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
+[![Reddit Demo Community](https://img.shields.io/badge/Reddit_Demo-r/toxzen__app__dev-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/toxzen_app_dev/)
 
 ![Devvit](https://img.shields.io/badge/Devvit_Web-FF4500?style=flat&logo=reddit&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
 ![Hono](https://img.shields.io/badge/Hono-E36002?style=flat&logo=hono&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Gemini_Flash-4285F4?style=flat&logo=google&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
-[![CI](https://github.com/edycutjong/toxzen/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/toxzen/actions/workflows/ci.yml)
 
 ---
 
 ## 📸 See it in Action
 
-![ToxZen Demo](https://raw.githubusercontent.com/edycutjong/toxzen/main/docs/og-image.png)
+![ToxZen Demo](https://github.com/user-attachments/assets/b53c3e10-1d94-4784-bd2c-1d72f705c513)
 
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
@@ -139,6 +139,16 @@ npm run dev
 
 > **For Judges:** The app uses Devvit's built-in settings system. Set the Gemini API key via `npx devvit settings set geminiApiKey` after installing.
 
+### Subreddit Installation
+
+To install and run ToxZen on your own subreddit:
+1. Visit the [ToxZen App Directory Page](https://developers.reddit.com/apps/toxzen-app) and click **Install**.
+2. Alternatively, install it via the Devvit CLI:
+   ```bash
+   npx devvit install <subreddit_name>
+   ```
+
+
 ## 🧪 Testing & CI
 
 ```bash
@@ -199,7 +209,7 @@ ToxZen/
 
 ## 🙏 Acknowledgments
 
-Built for the [Devpost Mod Tools Migration Hackathon 2026](https://mod-tools-migration.devpost.com). Thank you to Reddit for the Devvit platform and Google for the Gemini API.
+Built for the [Devpost Mod Tools Migration Hackathon 2026](https://mod-tools-migration.devpost.com) and published on the [Reddit App Directory](https://developers.reddit.com/apps/toxzen-app). Thank you to Reddit for the Devvit platform and Google for the Gemini API.
 
 ---
 
