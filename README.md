@@ -4,6 +4,7 @@
 
 [![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
 [![Reddit Demo Community](https://img.shields.io/badge/Reddit_Demo-r/toxzen__app__dev-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/toxzen_app_dev/)
+[![Watch Demo Video](https://img.shields.io/badge/Watch_Demo_Video-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/Zkb9pYqXVgA)
 
 ![Devvit](https://img.shields.io/badge/Devvit_Web-FF4500?style=flat&logo=reddit&logoColor=white)
 ![React](https://img.shields.io/badge/React_19-61DAFB?style=flat&logo=react&logoColor=black)
@@ -16,6 +17,8 @@
 
 ## 📸 See it in Action
 
+> [📺 Watch the 60-second video demo on YouTube!](https://youtu.be/Zkb9pYqXVgA)
+>
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
 ---
