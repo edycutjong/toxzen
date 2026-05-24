@@ -2069,5 +2069,35 @@ describe('ToxZen Hono Server API Routes', () => {
       expect(resMock.statusCode).toBe(500);
       expect(resMock.end).toHaveBeenCalledWith('Internal Server Error');
     });
+
+    it('nodeListener handles array of headers correctly', async () => {
+      if (!nodeListener) return;
+
+      const reqMock: any = {
+        method: 'GET',
+        url: '/api/stats',
+        headers: {
+          host: 'localhost',
+          'x-multiple-header': ['value1', 'value2'],
+        },
+        [Symbol.asyncIterator]: async function* () {}
+      };
+
+      const resHeaders: Record<string, string> = {};
+      const resMock: any = {
+        statusCode: 200,
+        setHeader: (key: string, val: string) => {
+          resHeaders[key] = val;
+        },
+        write: vi.fn(),
+        end: vi.fn(),
+      };
+
+      await nodeListener(reqMock, resMock);
+
+      expect(resMock.statusCode).toBe(200);
+      expect(resMock.write).toHaveBeenCalled();
+      expect(resMock.end).toHaveBeenCalled();
+    });
   });
 });

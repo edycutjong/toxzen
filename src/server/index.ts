@@ -1071,10 +1071,12 @@ const nodeListener = async (req: any, res: any) => {
 };
 
 // Start the server using Devvit's createServer
+/* v8 ignore start */
 if (process.env.NODE_ENV !== 'test' && !process.env.VITEST) {
   const server = createServer(nodeListener);
   server.listen(getServerPort());
 }
+/* v8 ignore stop */
 
 (app as any).nodeListener = nodeListener;
 

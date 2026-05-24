@@ -200,4 +200,64 @@ describe('App', () => {
       expect(screen.getByText('Failed to load appeals. Please refresh.')).toBeDefined();
     });
   });
+
+  it('handles seeding demo data successfully', async () => {
+    // 1. Mock first fetch to /api/appeals returning empty appeals list so empty state shows
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ appeals: [], stats: mockData.stats }),
+    });
+
+    // 2. Mock POST /api/seed response
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ success: true }),
+    });
+
+    // 3. Mock the subsequent fetch /api/appeals call to return data
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => mockData,
+    });
+
+    render(<App />);
+
+    // Wait for the empty state to render
+    const seedBtn = await screen.findByText('🌱 Seed Demo Data');
+    expect(seedBtn).toBeDefined();
+
+    // Click seed button
+    fireEvent.click(seedBtn);
+
+    // Verify it calls POST /api/seed
+    await waitFor(() => {
+      expect(fetchSpy).toHaveBeenCalledWith('/api/seed', { method: 'POST' });
+    });
+
+    // Verify it loads data and displays user card
+    await screen.findByText('u/user_1');
+  });
+
+  it('handles error when seeding demo data fails', async () => {
+    // 1. Mock first fetch to /api/appeals returning empty appeals list
+    fetchSpy.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ appeals: [], stats: mockData.stats }),
+    });
+
+    // 2. Mock POST /api/seed failing
+    fetchSpy.mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+    });
+
+    render(<App />);
+
+    // Wait for the empty state
+    const seedBtn = await screen.findByText('🌱 Seed Demo Data');
+    fireEvent.click(seedBtn);
+
+    // Verify error is shown
+    await screen.findByText('Failed to seed demo data. Please try again.');
+  });
 });
