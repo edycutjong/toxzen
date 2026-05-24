@@ -128,7 +128,7 @@ export function getSeverityEmoji(severity: Severity): string {
     case 'low': return '🟢';
     case 'medium': return '🟡';
     case 'high': return '🔴';
-    case 'extreme': return '🔴';
+    case 'extreme': return '⛔';
   }
 }
 

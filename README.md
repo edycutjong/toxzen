@@ -2,8 +2,6 @@
 
 *AI-shielded ban appeal processor that protects moderators from toxic content while helping them make faster, fairer decisions — all inside Reddit native UI.*
 
-![ToxZen](https://github.com/user-attachments/assets/1c603fcc-414f-43e8-977d-8d2fecfc4bbc)
-
 [![Built for Devpost](https://img.shields.io/badge/Devpost-Mod_Tools_Migration-8b5cf6?style=for-the-badge)](https://mod-tools-migration.devpost.com)
 [![Reddit Demo Community](https://img.shields.io/badge/Reddit_Demo-r/toxzen__app__dev-FF4500?style=for-the-badge&logo=reddit&logoColor=white)](https://www.reddit.com/r/toxzen_app_dev/)
 
@@ -12,12 +10,11 @@
 ![Hono](https://img.shields.io/badge/Hono-E36002?style=flat&logo=hono&logoColor=white)
 ![Gemini](https://img.shields.io/badge/Gemini_Flash-4285F4?style=flat&logo=google&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis_KV_Store-DC382D?style=flat&logo=redis&logoColor=white)
 
 ---
 
 ## 📸 See it in Action
-
-![ToxZen Demo](https://github.com/user-attachments/assets/b53c3e10-1d94-4784-bd2c-1d72f705c513)
 
 > **Toxic wall of text → AI-shielded summary with severity badge → one-click verdict.** The mod never reads a single slur.
 
@@ -38,13 +35,15 @@ A volunteer moderator of a 2-million-member subreddit opens their 47th ban appea
 
 **Key Features:**
 - 🛡️ **AI Content Shield:** Gemini Flash generates clinical summaries — never reproduces toxic language
-- 🎯 **Severity Scoring:** 0–100 toxicity scale with color-coded badges (🟢 Low / 🟡 Medium / 🔴 High / 🔴 Extreme)
+- 🎯 **Severity Scoring:** 0–100 toxicity scale with color-coded badges (🟢 Low / 🟡 Medium / 🔴 High / ⛔ Extreme)
 - 🧠 **Remorse Detection:** Genuine ✅ vs. Performative ⚠️ vs. Absent ❌ — AI identifies manipulation
 - ⚡ **One-Click Verdicts:** Accept, Deny, Escalate with configurable auto-response templates
 - 👁 **Raw Reveal (2-step):** Content warning dialog before showing unfiltered text — opt-in only
 - 📊 **Wellness Dashboard:** "You've been shielded from 1,847 words of toxic content today"
 - 🔒 **30-Day TTL:** All data auto-expires per Reddit's user-deletion compliance policies
 - ⏱️ **Cooldown Enforcement:** 24-hour appeal cooldown prevents spam
+- 🔁 **Manual Review Fallback:** If AI analysis fails after 3 retries, the appeal is flagged for manual review — mods can still issue verdicts without the AI summary
+- ⚠️ **Low Confidence Warning:** When AI confidence is below 60%, a visual warning prompts the mod to verify manually before deciding
 
 ## 🏗️ Architecture & Tech Stack
 
@@ -74,7 +73,7 @@ graph LR
     style G fill:#06b6d4,color:#fff
 ```
 
-### Server Endpoints (10 Hono routes)
+### Server Endpoints (14 Hono routes)
 
 | Endpoint | Type | Purpose |
 |---|---|---|
@@ -83,11 +82,15 @@ graph LR
 | `/internal/menu/wellness` | Menu | Open wellness dashboard |
 | `/internal/form/appeal-submit` | Form | Process appeal + schedule AI |
 | `/internal/form/verdict-submit` | Form | Record mod verdict |
-| `/internal/scheduler/analyze-appeal` | Scheduler | Gemini API call with retry |
+| `/internal/form/reveal-raw` | Form | Raw reveal confirmation handler |
+| `/internal/scheduler/analyze-appeal` | Scheduler | Gemini API call with retry (3× exponential backoff) |
 | `/api/appeals` | API | List pending appeals |
 | `/api/appeal/:id` | API | Single appeal detail |
 | `/api/appeal/:id/verdict` | API | Submit verdict from UI |
 | `/api/appeal/:id/reveal` | API | Reveal raw text (opt-in) |
+| `/api/appeal/:id/retry` | API | Retry failed Reddit actions (unban/modmail) |
+| `/api/stats` | API | Daily wellness stats |
+| `/api/seed` | API | Load demo appeals for playtesting |
 
 ## 🏆 Hackathon Track Alignment
 
@@ -117,36 +120,52 @@ Please ensure this domain is whitelisted/allowed in your environment settings (d
 - npm
 - [Devvit CLI](https://developers.reddit.com/docs/get-started/quickstart)
 
-### Installation
+### Installation & Playtesting
 
-```bash
-# Clone the repo
-git clone https://github.com/edycutjong/toxzen.git
-cd toxzen
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/edycutjong/toxzen.git
+   cd toxzen
+   ```
 
-# Install dependencies
-npm install
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-# Set your Gemini API key via Devvit settings
-npx devvit settings set geminiApiKey
+3. **Log in to your Reddit developer account:**
+   ```bash
+   npx devvit login
+   ```
 
-# Build
-npm run build
+4. **Set your Google Gemini API key:**
+   ```bash
+   npx devvit settings set geminiApiKey
+   ```
 
-# Start playtest
-npm run dev
-```
+5. **Start playtesting on your test subreddit:**
+   ```bash
+   # Build frontend assets
+   npm run build
+
+   # Start playtest
+   npx devvit playtest <subreddit_name>
+   ```
 
 > **For Judges:** The app uses Devvit's built-in settings system. Set the Gemini API key via `npx devvit settings set geminiApiKey` after installing.
+>
+> **Demo mode:** Seed appeals (loaded via the "Seed Demo Data" button in the queue) skip live Reddit API calls (unban + modmail) since demo usernames don't exist on Reddit. All other app logic — AI analysis, shielding, wellness stats — runs normally on seeded data.
 
 ### Subreddit Installation
 
-To install and run ToxZen on your own subreddit:
-1. Visit the [ToxZen App Directory Page](https://developers.reddit.com/apps/toxzen-app) and click **Install**.
-2. Alternatively, install it via the Devvit CLI:
-   ```bash
-   npx devvit install <subreddit_name>
-   ```
+To install and deploy the app directly to your subreddit:
+```bash
+# Upload and register the app
+npx devvit upload
+
+# Install the app to your subreddit
+npx devvit install <subreddit_name>
+```
 
 
 ## 🧪 Testing & CI
@@ -190,7 +209,7 @@ ToxZen/
 │   │   ├── review.html               # Expanded review entry
 │   │   └── wellness.html             # Wellness dashboard entry
 │   ├── server/
-│   │   └── index.ts                  # Hono server (10 endpoints)
+│   │   └── index.ts                  # Hono server (14 endpoints)
 │   └── shared/
 │       └── types.ts                  # TypeScript interfaces
 ├── devvit.json                       # Devvit app config
@@ -209,7 +228,7 @@ ToxZen/
 
 ## 🙏 Acknowledgments
 
-Built for the [Devpost Mod Tools Migration Hackathon 2026](https://mod-tools-migration.devpost.com) and published on the [Reddit App Directory](https://developers.reddit.com/apps/toxzen-app). Thank you to Reddit for the Devvit platform and Google for the Gemini API.
+Built for the [Devpost Mod Tools Migration Hackathon 2026](https://mod-tools-migration.devpost.com). Thank you to Reddit for the Devvit platform and Google for the Gemini API.
 
 ---
 

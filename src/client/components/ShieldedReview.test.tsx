@@ -53,7 +53,7 @@ describe('ShieldedReview', () => {
     expect(screen.getByText('u/toxic_user')).toBeDefined();
     expect(screen.getByText('harassment')).toBeDefined();
     expect(screen.getByText('3')).toBeDefined(); // Prior bans count
-    expect(screen.getByText('🔴 EXTREME (92/100)')).toBeDefined();
+    expect(screen.getByText('⛔ EXTREME (92/100)')).toBeDefined();
     expect(screen.getByText('The user is extremely toxic and shows no remorse.')).toBeDefined();
     expect(screen.getByText('Threatening language')).toBeDefined();
     expect(screen.getByText('Multiple slurs used')).toBeDefined();

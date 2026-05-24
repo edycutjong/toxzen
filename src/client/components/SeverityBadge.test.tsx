@@ -37,6 +37,6 @@ describe('SeverityBadge', () => {
     const badge = screen.getByText(/EXTREME/);
     expect(badge).toBeDefined();
     expect(badge.className).toContain('severity-badge--extreme');
-    expect(screen.getByText(/🔴 EXTREME \(95\/100\)/)).toBeDefined();
+    expect(screen.getByText(/⛔ EXTREME \(95\/100\)/)).toBeDefined();
   });
 });

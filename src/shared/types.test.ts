@@ -42,9 +42,12 @@ describe('Shared Utility Helpers', () => {
       expect(getSeverityEmoji('medium')).toBe('🟡');
     });
 
-    it('returns red for high and extreme', () => {
+    it('returns red for high', () => {
       expect(getSeverityEmoji('high')).toBe('🔴');
-      expect(getSeverityEmoji('extreme')).toBe('🔴');
+    });
+
+    it('returns no-entry for extreme', () => {
+      expect(getSeverityEmoji('extreme')).toBe('⛔');
     });
   });
 

@@ -50,12 +50,17 @@ vi.mock('@devvit/web/server', () => {
 describe('ToxZen Hono Server API Routes', () => {
   let store: Record<string, string> = {};
   let zSets: Record<string, Array<{ member: string; score: number }>> = {};
+  let consoleErrorSpy: any;
+  let consoleLogSpy: any;
   let fetchSpy: any;
 
   beforeEach(() => {
     store = {};
     zSets = {};
     vi.clearAllMocks();
+
+    consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    consoleLogSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
 
     // Reset context to default test values
     mockContext.subredditName = 'ToxZenDemo';
@@ -127,6 +132,8 @@ describe('ToxZen Hono Server API Routes', () => {
 
   afterEach(() => {
     fetchSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
+    consoleLogSpy.mockRestore();
   });
 
   // ─── Menu Endpoints ────────────────────────────────────────────────────────

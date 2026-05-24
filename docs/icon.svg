@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Droplet gradient: cyan → violet -->
+    <linearGradient id="drop-grad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="var(--primary, #06B6D4)"/>
+      <stop offset="100%" stop-color="var(--accent, #8B5CF6)"/>
+    </linearGradient>
+
+    <!-- Droplet fill: translucent interior -->
+    <linearGradient id="drop-fill" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="var(--primary, #06B6D4)" stop-opacity="0.12"/>
+      <stop offset="50%" stop-color="var(--accent, #8B5CF6)" stop-opacity="0.06"/>
+      <stop offset="100%" stop-color="var(--accent, #8B5CF6)" stop-opacity="0.15"/>
+    </linearGradient>
+
+    <!-- Lotus gradient -->
+    <linearGradient id="lotus-grad" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="var(--primary, #06B6D4)" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="var(--accent, #8B5CF6)" stop-opacity="0.7"/>
+    </linearGradient>
+
+    <!-- Outer glow -->
+    <filter id="outer-glow" x="-35%" y="-35%" width="170%" height="170%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="0 0 0 0 0.024
+                0 0 0 0 0.714
+                0 0 0 0 0.831
+                0 0 0 0.3 0" result="cyan-glow"/>
+      <feMerge>
+        <feMergeNode in="cyan-glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Lotus inner glow -->
+    <filter id="lotus-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
+      <feColorMatrix in="blur" type="matrix"
+        values="0 0 0 0 0.3
+                0 0 0 0 0.45
+                0 0 0 0 0.95
+                0 0 0 0.5 0"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <!-- Droplet clip path -->
+    <clipPath id="drop-clip">
+      <path d="M256 36
+               C256 36 108 220 108 320
+               C108 402 176 464 256 464
+               C336 464 404 402 404 320
+               C404 220 256 36 256 36Z"/>
+    </clipPath>
+  </defs>
+
+  <!--
+    ToxZen Icon — Zen Droplet + Lotus
+    Droplet = purification (toxic → clean)
+    Lotus = zen, purity rising from mud
+    Perfectly bilaterally symmetric around x=256
+  -->
+
+  <!-- Droplet body — translucent fill -->
+  <path d="M256 36
+           C256 36 108 220 108 320
+           C108 402 176 464 256 464
+           C336 464 404 402 404 320
+           C404 220 256 36 256 36Z"
+        fill="url(#drop-fill)"/>
+
+  <!-- Droplet outline — gradient stroke with glow -->
+  <path d="M256 36
+           C256 36 108 220 108 320
+           C108 402 176 464 256 464
+           C336 464 404 402 404 320
+           C404 220 256 36 256 36Z"
+        fill="none"
+        stroke="url(#drop-grad)"
+        stroke-width="3.5"
+        stroke-linejoin="round"
+        filter="url(#outer-glow)"/>
+
+  <!-- ── Lotus silhouette (centered at 256, 390) ── -->
+  <g filter="url(#lotus-glow)" transform="translate(256, 390) scale(2.2)">
+    <!-- Center petal (top) -->
+    <ellipse cx="0" cy="-48" rx="14" ry="42"
+             fill="url(#lotus-grad)" opacity="0.85"/>
+
+    <!-- Inner-left petal -->
+    <ellipse cx="0" cy="-36" rx="12" ry="34"
+             transform="rotate(-30)"
+             fill="url(#lotus-grad)" opacity="0.75"/>
+
+    <!-- Inner-right petal (mirrored) -->
+    <ellipse cx="0" cy="-36" rx="12" ry="34"
+             transform="rotate(30)"
+             fill="url(#lotus-grad)" opacity="0.75"/>
+
+    <!-- Outer-left petal -->
+    <ellipse cx="0" cy="-26" rx="10" ry="26"
+             transform="rotate(-58)"
+             fill="url(#lotus-grad)" opacity="0.6"/>
+
+    <!-- Outer-right petal (mirrored) -->
+    <ellipse cx="0" cy="-26" rx="10" ry="26"
+             transform="rotate(58)"
+             fill="url(#lotus-grad)" opacity="0.6"/>
+
+    <!-- Pistil (center dot) -->
+    <circle cx="0" cy="0" r="6"
+            fill="url(#drop-grad)" opacity="0.9"/>
+
+    <!-- Inner ring -->
+    <circle cx="0" cy="0" r="12"
+            fill="none"
+            stroke="url(#drop-grad)"
+            stroke-width="1.5"
+            opacity="0.25"/>
+  </g>
+
+  <!-- Highlight reflection (top-left of droplet) -->
+  <ellipse cx="208" cy="200" rx="16" ry="28"
+           fill="white" opacity="0.06"
+           transform="rotate(-20, 208, 200)"/>
+</svg>
