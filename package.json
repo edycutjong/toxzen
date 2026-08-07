@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@devvit/start": "0.13.2",
-    "@devvit/web": "0.12.24",
+    "@devvit/web": "0.13.11",
     "hono": "^4.12.34",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
