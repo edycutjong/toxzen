@@ -14,7 +14,7 @@
     "ci": "npm run typecheck && npm run test:coverage && npm run build"
   },
   "dependencies": {
-    "@devvit/start": "0.13.2",
+    "@devvit/start": "0.14.0",
     "@devvit/web": "0.13.11",
     "hono": "^4.13.0",
     "react": "^19.0.0",
